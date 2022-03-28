@@ -6,16 +6,21 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+
 public class ImageViewerWindowController extends Thread {
     private final List<Image> images = new ArrayList<>();
     private int currentImageIndex = 0;
-    private boolean exit = false;
+    private boolean isStopped = false;
+    @FXML
+    private TextField displayTime;
 
     private int threadTime;
     @FXML
@@ -26,6 +31,7 @@ public class ImageViewerWindowController extends Thread {
 
     public ImageViewerWindowController() {
     }
+
 
     @FXML
     private void handleBtnLoadAction() {
@@ -68,23 +74,22 @@ public class ImageViewerWindowController extends Thread {
     }
 
     public void handleStartSlideShow(ActionEvent actionEvent) throws InterruptedException {
-        {
             start();
         }
-    }
 
-    public void handleStopSlideShow(ActionEvent actionEvent) {
-        stop();
-    }
 
-//FIX ME ADD POP TO DECLARE SLEEP TIME, BETWEEN 1000-5000
+    public void handleStopSlideShow(ActionEvent actionEvent) throws InterruptedException {
+            isStopped = true;
+        }
+
     @Override
     public void run() {
-            while (!images.isEmpty()) {
+            while (!images.isEmpty() && !isStopped) {
                 handleBtnNextAction();
                 try {
-                    //Replace this with variable threadSleep
-                    Thread.sleep(1000);
+                    long display = Long.parseLong(displayTime.getText());
+                    Thread.sleep(display);
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
