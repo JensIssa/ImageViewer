@@ -3,6 +3,10 @@ package dk.easv;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -15,19 +19,19 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 
-public class ImageViewerWindowController extends Thread {
+public class ImageViewerWindowController{
     private final List<Image> images = new ArrayList<>();
     private int currentImageIndex = 0;
-    private boolean isStopped = false;
+    private boolean isStopped = true;
     @FXML
     private TextField displayTime;
-
-    private int threadTime;
     @FXML
     Parent root;
 
     @FXML
     private ImageView imageView;
+
+    ScheduledExecutorService executorService;
 
     public ImageViewerWindowController() {
     }
@@ -74,25 +78,25 @@ public class ImageViewerWindowController extends Thread {
     }
 
     public void handleStartSlideShow(ActionEvent actionEvent) throws InterruptedException {
-            start();
+            if (isStopped){
+                executorService = Executors.newScheduledThreadPool(1);
+                Runnable slide = this::handleBtnNextAction;
+                calculateTime();
+                executorService.scheduleAtFixedRate(slide, calculateTime(), calculateTime(), TimeUnit.SECONDS);
+                isStopped = false;
+                System.out.println("start");
+            }
         }
 
+    public Long calculateTime(){
+        return Long.parseLong(displayTime.getText());
+    }
 
     public void handleStopSlideShow(ActionEvent actionEvent) throws InterruptedException {
-            isStopped = true;
+            if (!isStopped){
+                executorService.shutdown();
+                isStopped = true;
+            }
         }
 
-    @Override
-    public void run() {
-            while (!images.isEmpty() && !isStopped) {
-                handleBtnNextAction();
-                try {
-                    long display = Long.parseLong(displayTime.getText());
-                    Thread.sleep(display);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-    }
 }
