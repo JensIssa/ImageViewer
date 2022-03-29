@@ -7,9 +7,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,8 +24,10 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 
-public class ImageViewerWindowController{
+public class ImageViewerWindowController extends Task<String> {
     private final List<Image> images = new ArrayList<>();
+    @FXML
+    private TextArea displayArea;
     private int currentImageIndex = 0;
     private boolean isStopped = true;
     @FXML
@@ -31,9 +38,17 @@ public class ImageViewerWindowController{
     @FXML
     private ImageView imageView;
 
+    private ObservableList<String> names = FXCollections.observableArrayList();
+    private DisplayTask task;
+
     ScheduledExecutorService executorService;
 
     public ImageViewerWindowController() {
+    }
+
+    @Override
+    protected String call() throws Exception {
+        return null;
     }
 
 
@@ -75,6 +90,10 @@ public class ImageViewerWindowController{
         if (!images.isEmpty()) {
             imageView.setImage(images.get(currentImageIndex));
         }
+    }
+
+    public void setDisplayArea() {
+
     }
 
     public void handleStartSlideShow(ActionEvent actionEvent) throws InterruptedException {
