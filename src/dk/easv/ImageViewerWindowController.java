@@ -29,6 +29,7 @@ public class ImageViewerWindowController extends Thread {
     @FXML
     private ImageView imageView;
 
+
     public ImageViewerWindowController() {
     }
 
@@ -75,15 +76,20 @@ public class ImageViewerWindowController extends Thread {
 
     public void handleStartSlideShow(ActionEvent actionEvent) throws InterruptedException {
             start();
+            isStopped = false;
+
         }
 
-
+    //FIX ME ADD POP TO DECLARE SLEEP TIME, BETWEEN 1000-5000
     public void handleStopSlideShow(ActionEvent actionEvent) throws InterruptedException {
             isStopped = true;
+            stop();
         }
+
 
     @Override
     public void run() {
+
             while (!images.isEmpty() && !isStopped) {
                 handleBtnNextAction();
                 try {
