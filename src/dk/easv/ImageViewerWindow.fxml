@@ -3,11 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<<<<<<< Updated upstream
-=======
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextArea?>
->>>>>>> Stashed changes
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -31,11 +26,10 @@
                         </Button>
                         <Button id="btnNext" fx:id="btnNext" mnemonicParsing="false" onAction="#handleBtnNextAction" text="Next" />
                   <Button mnemonicParsing="false" onAction="#handleStartSlideShow" prefHeight="28.0" prefWidth="113.0" text="Start slideshow" />
-                  <Button fx:id="stopBtn" mnemonicParsing="false" onAction="#handleStopSlideShow" prefHeight="25.0" text="Stop slideshow" />
+                  <Button mnemonicParsing="false" onAction="#handleStopSlideShow" prefHeight="25.0" text="Stop slideshow" />
                   <TextField fx:id="displayTime" promptText="Display time" />
                     </buttons>
                 </ButtonBar>
-            <Slider fx:id="durationSlider" />
             </children>
             <opaqueInsets>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
