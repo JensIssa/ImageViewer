@@ -7,45 +7,43 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayTask extends Task<Image> {
+public class DisplayTask extends Task<Picture> {
 
 
-
-    private List<Image> animalList;
-
-    private int sleepDuration;
+    private List<Picture> pictures;
     private boolean isRunning = true;
     private int currentImageIndex = 0;
-    private Map<String, Integer> count;
     private int waitTime;
 
 
-    public DisplayTask(List<Image> images, int waitTime) {
-        this.animalList = images;
+    public DisplayTask(List<Picture> images, int waitTime) {
+        this.pictures = images;
         this.waitTime = waitTime;
     }
 
 
     @Override
-    protected Image call() throws Exception {
-        while (isRunning) {
-            Thread.sleep(sleepDuration * 1000L);
+    protected Picture call() throws Exception {
+        while (true){
             getNextImage();
+            Thread.sleep(waitTime * 1000L);
         }
-        return null;
     }
 
     private void getNextImage() {
-        if (!animalList.isEmpty()) {
-            currentImageIndex = (currentImageIndex + 1) % animalList.size();
-            Image image = animalList.get(currentImageIndex);
-            updateValue(image);
-            updateMessage(new File(image.getUrl()).getName());
+        if (!pictures.isEmpty()) {
+            currentImageIndex = (currentImageIndex + 1) % pictures.size();
         }
+        Picture image = pictures.get(currentImageIndex);
+        updateValue(image);
     }
 
-    public void setWaitTime(int waitTime) {
-        this.waitTime = waitTime;
+
+    public int getCurrentImageIndex() {
+        return currentImageIndex;
     }
+
 }
+
+
 

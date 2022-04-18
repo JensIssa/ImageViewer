@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -26,6 +27,8 @@ import javax.swing.*;
 
 public class ImageViewerWindowController extends Task<String> {
     private final List<Image> images = new ArrayList<>();
+    @FXML
+    private Label imageName;
     @FXML
     private TextArea displayArea;
     private int currentImageIndex = 0;
