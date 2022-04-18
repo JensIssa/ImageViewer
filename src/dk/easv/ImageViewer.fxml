@@ -48,13 +48,13 @@
                   </VBox>
                </children>
             </VBox>
-            <ImageView fx:id="imageView" fitHeight="428.0" fitWidth="550.0" layoutX="450.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="imageName" alignment="CENTER" contentDisplay="CENTER" layoutX="500.0" layoutY="29.0" prefHeight="38.0" prefWidth="195.0" text="Image name">
+            <ImageView fx:id="imageView" fitHeight="316.0" fitWidth="520.0" layoutX="437.0" layoutY="148.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="imageName" alignment="CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="74.0" prefHeight="38.0" prefWidth="195.0" text="Image name">
                <font>
                   <Font name="Britannic Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="colorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="710.0" layoutY="29.0" prefHeight="38.0" prefWidth="195.0" text="Color">
+            <Label fx:id="colorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="645.0" layoutY="-2.0" prefHeight="189.0" prefWidth="283.0" text="Color">
                <font>
                   <Font name="Britannic Bold" size="18.0" />
                </font>
