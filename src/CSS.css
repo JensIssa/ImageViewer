@@ -1,0 +1,31 @@
+.button{
+    -fx-background-color: darkgreen;
+    -fx-text-fill: black;
+    -fx-opacity: 100;
+    -fx-border-radius: 90;
+    -fx-background-radius: 90;
+    -fx-font-family: "Lucida Sans";
+    -fx-font-size: 15px;
+}
+
+.button:pressed{
+    -fx-background-color: #024102;
+    -fx-border-radius: 90;
+    -fx-background-radius: 90;
+    -fx-cursor: hand;
+}
+
+.button:focused {
+    -fx-background-color: #024102;
+    -fx-border-color: #CDD1D6;
+    -fx-border-radius: 90;
+    -fx-background-radius: 90;
+    -fx-cursor: hand;
+}
+
+.button:hover{
+    -fx-background-color: #024102;
+    -fx-border-radius: 90;
+    -fx-background-radius: 90;
+    -fx-cursor: hand;
+}
