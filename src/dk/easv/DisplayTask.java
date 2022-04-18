@@ -21,6 +21,12 @@ public class DisplayTask extends Task<Picture> {
         this.waitTime = waitTime;
     }
 
+    /**
+     * The call method is invoked when the task is executed, the method must be overwritten and called by a subclass.
+     * The call method performs the background thread logic.
+     * @return
+     * @throws Exception
+     */
 
     @Override
     protected Picture call() throws Exception {
@@ -30,6 +36,10 @@ public class DisplayTask extends Task<Picture> {
         }
     }
 
+    /**
+     * This method gets the next image in our slideshow
+     */
+
     private void getNextImage() {
         if (!pictures.isEmpty()) {
             currentImageIndex = (currentImageIndex + 1) % pictures.size();
@@ -38,6 +48,11 @@ public class DisplayTask extends Task<Picture> {
         updateValue(image);
     }
 
+
+    /**
+     * Returns the currentImageIndex
+     * @return
+     */
 
     public int getCurrentImageIndex() {
         return currentImageIndex;
