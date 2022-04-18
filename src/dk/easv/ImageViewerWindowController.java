@@ -1,8 +1,11 @@
 package dk.easv;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
@@ -25,8 +29,10 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 
-public class ImageViewerWindowController extends Task<String> {
-    private final List<Image> images = new ArrayList<>();
+public class ImageViewerWindowController implements Initializable {
+    private final List<Picture> images = new ArrayList<>();
+    @FXML
+    private Label colorLabel;
     @FXML
     private Label imageName;
     @FXML
@@ -66,9 +72,19 @@ public class ImageViewerWindowController extends Task<String> {
         if (!files.isEmpty()) {
             files.forEach((File f) ->
             {
-                images.add(new Image(f.toURI().toString()));
+                Image image = (new Image(f.toURI().toString()));
+                try {
+                    images.add(new Picture(image, f));
+                 } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }   catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                image.getPixelReader();
             });
-            displayImage();
+            displayImage(images.get(0).getImage());
+            colorLabel.setText(images.get(0).getRgbColorList().toString());
+            imageName.setText(images.get(0).getFileUrl());
         }
     }
 
@@ -89,10 +105,8 @@ public class ImageViewerWindowController extends Task<String> {
         }
     }
 
-    private void displayImage() {
-        if (!images.isEmpty()) {
-            imageView.setImage(images.get(currentImageIndex));
-        }
+    private void displayImage(Image image) {
+        imageView.setImage(image);
     }
 
     public void setDisplayArea() {
@@ -121,4 +135,8 @@ public class ImageViewerWindowController extends Task<String> {
             }
         }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 }

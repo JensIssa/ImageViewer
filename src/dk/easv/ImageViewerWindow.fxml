@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1091.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.ImageViewerWindowController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1091.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.ImageViewerWindowController">
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="1091.0" BorderPane.alignment="CENTER">
             <children>
@@ -29,9 +29,10 @@
                   <Button mnemonicParsing="false" onAction="#handleStartSlideShow" prefHeight="28.0" prefWidth="113.0" text="Start slideshow" />
                   <Button mnemonicParsing="false" onAction="#handleStopSlideShow" prefHeight="25.0" text="Stop slideshow" />
                   <TextField fx:id="displayTime" promptText="Display time" />
+                  <Label fx:id="imageName" text="Label" />
+                  <Label fx:id="colorLabel" text="Label" />
                     </buttons>
                 </ButtonBar>
-            <Label fx:id="imageName" text="Label" />
             </children>
             <opaqueInsets>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
