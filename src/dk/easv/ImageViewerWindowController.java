@@ -36,7 +36,6 @@ public class ImageViewerWindowController implements Initializable {
     @FXML
     private Label imageName;
     @FXML
-    private TextArea displayArea;
     private int currentImageIndex = 0;
     private boolean isStopped = true;
     @FXML
@@ -55,11 +54,6 @@ public class ImageViewerWindowController implements Initializable {
     public ImageViewerWindowController() {
     }
 
-    @Override
-    protected String call() throws Exception {
-        return null;
-    }
-
 
     @FXML
     private void handleBtnLoadAction() {
@@ -73,13 +67,7 @@ public class ImageViewerWindowController implements Initializable {
             files.forEach((File f) ->
             {
                 Image image = (new Image(f.toURI().toString()));
-                try {
-                    images.add(new Picture(image, f));
-                 } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }   catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                images.add(new Picture(image, f));
                 image.getPixelReader();
             });
             displayImage(images.get(0).getImage());
@@ -91,9 +79,8 @@ public class ImageViewerWindowController implements Initializable {
     @FXML
     private void handleBtnPreviousAction() {
         if (!images.isEmpty()) {
-            currentImageIndex =
-                    (currentImageIndex - 1 + images.size()) % images.size();
-            displayImage();
+            currentImageIndex = (currentImageIndex - 1 + images.size()) % images.size();
+            displayImage(images.get(currentImageIndex).getImage());
         }
     }
 
@@ -101,7 +88,7 @@ public class ImageViewerWindowController implements Initializable {
     private void handleBtnNextAction() {
         if (!images.isEmpty()) {
             currentImageIndex = (currentImageIndex + 1) % images.size();
-            displayImage();
+            displayImage(images.get(currentImageIndex).getImage());
         }
     }
 
@@ -120,6 +107,13 @@ public class ImageViewerWindowController implements Initializable {
                 calculateTime();
                 executorService.scheduleAtFixedRate(slide, calculateTime(), calculateTime(), TimeUnit.SECONDS);
                 isStopped = false;
+                DisplayTask displayTask = new DisplayTask(images, calculateTime());
+                displayTask.valueProperty().addListener((obs, o, n)->{
+                    displayImage(n.getImage());
+                    imageName.setText(images.get(displayTask.getCurrentImageIndex()).getFileUrl());
+                    colorLabel.setText(images.get(displayTask.getCurrentImageIndex()).getRgbColorList().toString());
+                });
+                executorService.submit(displayTask);
                 System.out.println("start");
             }
         }

@@ -13,10 +13,10 @@ public class DisplayTask extends Task<Picture> {
     private List<Picture> pictures;
     private boolean isRunning = true;
     private int currentImageIndex = 0;
-    private int waitTime;
+    private long waitTime;
 
 
-    public DisplayTask(List<Picture> images, int waitTime) {
+    public DisplayTask(List<Picture> images, long waitTime) {
         this.pictures = images;
         this.waitTime = waitTime;
     }
