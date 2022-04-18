@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
@@ -16,9 +17,10 @@ public class Picture {
     private ExecutorService executorService;
     private List<Integer> rgbColorList;
 
-    public Picture(Image image, File file) {
+    public Picture(Image image, File file) throws ExecutionException, InterruptedException {
         this.image = image;
         fileUrl = file.getName();
+
     }
 
     public Image getImage() {

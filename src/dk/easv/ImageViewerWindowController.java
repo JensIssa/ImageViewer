@@ -1,14 +1,12 @@
 package dk.easv;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +27,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 
-public class ImageViewerWindowController implements Initializable {
+public class ImageViewerWindowController{
     private final List<Picture> images = new ArrayList<>();
     @FXML
     private Label colorLabel;
@@ -50,8 +48,15 @@ public class ImageViewerWindowController implements Initializable {
     private DisplayTask task;
 
     ScheduledExecutorService executorService;
+    ExecutorService service = Executors.newFixedThreadPool(1);
 
+
+    private int redCounter;
+    private int greenCounter;
+    private int blueCounter;
+    private int mixedCounter;
     public ImageViewerWindowController() {
+
     }
 
 
@@ -67,11 +72,14 @@ public class ImageViewerWindowController implements Initializable {
             files.forEach((File f) ->
             {
                 Image image = (new Image(f.toURI().toString()));
-                images.add(new Picture(image, f));
+                try {
+                    images.add(new Picture(image, f));
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
                 image.getPixelReader();
             });
             displayImage(images.get(0).getImage());
-            colorLabel.setText(images.get(0).getRgbColorList().toString());
             imageName.setText(images.get(0).getFileUrl());
         }
     }
@@ -93,28 +101,34 @@ public class ImageViewerWindowController implements Initializable {
     }
 
     private void displayImage(Image image) {
-        imageView.setImage(image);
+        if (!images.isEmpty())
+        {
+            imageView.setImage(image);
+        }
+
     }
 
-    public void setDisplayArea() {
-
+    public void setDisplayTime(){
+        executorService = Executors.newScheduledThreadPool(1);
+        Runnable slide = this::handleBtnNextAction;
+        calculateTime();
+        executorService.scheduleAtFixedRate(slide, calculateTime(), calculateTime(), TimeUnit.SECONDS);
     }
+
 
     public void handleStartSlideShow(ActionEvent actionEvent) throws InterruptedException {
             if (isStopped){
-                executorService = Executors.newScheduledThreadPool(1);
-                Runnable slide = this::handleBtnNextAction;
-                calculateTime();
-                executorService.scheduleAtFixedRate(slide, calculateTime(), calculateTime(), TimeUnit.SECONDS);
+                setDisplayTime();
                 isStopped = false;
                 DisplayTask displayTask = new DisplayTask(images, calculateTime());
                 displayTask.valueProperty().addListener((obs, o, n)->{
                     displayImage(n.getImage());
                     imageName.setText(images.get(displayTask.getCurrentImageIndex()).getFileUrl());
-                    colorLabel.setText(images.get(displayTask.getCurrentImageIndex()).getRgbColorList().toString());
+                    displayTask.setCount(colorLabel);
                 });
-                executorService.submit(displayTask);
+                service.submit(displayTask);
                 System.out.println("start");
+                System.out.println(redCounter + greenCounter + blueCounter + mixedCounter);
             }
         }
 
@@ -129,8 +143,6 @@ public class ImageViewerWindowController implements Initializable {
             }
         }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
 
-    }
+
 }

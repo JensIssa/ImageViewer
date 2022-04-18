@@ -1,6 +1,10 @@
 package dk.easv;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.control.Label;
+import javafx.scene.image.PixelReader;
+import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.io.File;
@@ -14,11 +18,24 @@ public class DisplayTask extends Task<Picture> {
     private boolean isRunning = true;
     private int currentImageIndex = 0;
     private long waitTime;
+    private int red;
+    private int green;
+    private int blue;
+    private int mixed;
+    private javafx.scene.control.Label count;
 
 
     public DisplayTask(List<Picture> images, long waitTime) {
         this.pictures = images;
         this.waitTime = waitTime;
+    }
+
+    public javafx.scene.control.Label getCount() {
+        return count;
+    }
+
+    public void setCount(Label count) {
+        this.count = count;
     }
 
     /**
@@ -44,6 +61,7 @@ public class DisplayTask extends Task<Picture> {
         if (!pictures.isEmpty()) {
             currentImageIndex = (currentImageIndex + 1) % pictures.size();
         }
+        getPixelInfo();
         Picture image = pictures.get(currentImageIndex);
         updateValue(image);
     }
@@ -57,6 +75,33 @@ public class DisplayTask extends Task<Picture> {
     public int getCurrentImageIndex() {
         return currentImageIndex;
     }
+
+
+    private void getPixelInfo(){
+        Picture img = pictures.get(currentImageIndex);
+        PixelReader pReader = img.getImage().getPixelReader();
+        red = 0;
+        green = 0;
+        blue = 0;
+
+        for (int readY = 0; readY < img.getImage().getHeight(); readY++){
+            for (int readX = 0; readX < img.getImage().getWidth(); readX++){
+                Color color = pReader.getColor(readX,readY);
+                if(color.getBlue() > color.getGreen() && color.getBlue() > color.getRed()){
+                    blue++;
+                }else if(color.getGreen() > color.getBlue() && color.getGreen() > color.getRed()){
+                    green++;
+                }else if(color.getRed() > color.getBlue() && color.getRed() > color.getGreen()){
+                    red++;
+                }
+            }
+        }
+        Platform.runLater(() ->{
+            count.setText("Red: " +  red + "\nGreen: " + green + "\nBlue: " + blue);
+        });
+    }
+
+
 
 }
 
