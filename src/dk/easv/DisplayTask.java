@@ -94,10 +94,13 @@ public class DisplayTask extends Task<Picture> {
                 }else if(color.getRed() > color.getBlue() && color.getRed() > color.getGreen()){
                     red++;
                 }
+                else if(blue == red && blue == green && red == green) {
+                    mixed++;
+                }
             }
         }
         Platform.runLater(() ->{
-            count.setText("Red: " +  red + "\nGreen: " + green + "\nBlue: " + blue);
+            count.setText("Red: " +  red + "\nGreen: " + green + "\nBlue: " + blue + "\nMixed" + mixed);
         });
     }
 
