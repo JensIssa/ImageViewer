@@ -23,11 +23,16 @@ public class DisplayTask extends Task<Picture> {
     private int blue;
     private int mixed;
     private javafx.scene.control.Label count;
+    private boolean running = true;
 
 
     public DisplayTask(List<Picture> images, long waitTime) {
         this.pictures = images;
         this.waitTime = waitTime;
+    }
+
+    public DisplayTask(List<Picture> images){
+        this.pictures = images;
     }
 
     public javafx.scene.control.Label getCount() {
@@ -36,6 +41,13 @@ public class DisplayTask extends Task<Picture> {
 
     public void setCount(Label count) {
         this.count = count;
+    }
+
+
+
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     /**
@@ -83,6 +95,7 @@ public class DisplayTask extends Task<Picture> {
         red = 0;
         green = 0;
         blue = 0;
+        mixed = 0;
 
         for (int readY = 0; readY < img.getImage().getHeight(); readY++){
             for (int readX = 0; readX < img.getImage().getWidth(); readX++){
@@ -100,7 +113,7 @@ public class DisplayTask extends Task<Picture> {
             }
         }
         Platform.runLater(() ->{
-            count.setText("Red: " +  red + "\nGreen: " + green + "\nBlue: " + blue + "\nMixed" + mixed);
+            count.setText("Red: " +  red + "\nGreen: " + green + "\nBlue: " + blue + "\nMixed: " + mixed);
         });
     }
 

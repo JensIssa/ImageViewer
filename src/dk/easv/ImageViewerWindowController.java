@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -15,7 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonBar;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -25,6 +26,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+import javax.lang.model.type.ErrorType;
 import javax.swing.*;
 
 public class ImageViewerWindowController{
@@ -45,20 +47,10 @@ public class ImageViewerWindowController{
     private ImageView imageView;
 
     private ObservableList<String> names = FXCollections.observableArrayList();
-    private DisplayTask task;
+    private DisplayTask displayTask;
 
     ScheduledExecutorService executorService;
     ExecutorService service = Executors.newFixedThreadPool(1);
-
-
-    private int redCounter;
-    private int greenCounter;
-    private int blueCounter;
-    private int mixedCounter;
-    public ImageViewerWindowController() {
-
-    }
-
 
     @FXML
     private void handleBtnLoadAction() {
@@ -66,6 +58,7 @@ public class ImageViewerWindowController{
         fileChooser.setTitle("Select image files");
         fileChooser.getExtensionFilters().add(new ExtensionFilter("Images",
                 "*.png", "*.jpg", "*.gif", "*.tif", "*.bmp"));
+        fileChooser.setInitialDirectory(new File("src/dk/easv/PicsToProject" ));
         List<File> files = fileChooser.showOpenMultipleDialog(new Stage());
 
         if (!files.isEmpty()) {
@@ -74,8 +67,8 @@ public class ImageViewerWindowController{
                 Image image = (new Image(f.toURI().toString()));
                 try {
                     images.add(new Picture(image, f));
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
                 }
                 image.getPixelReader();
             });
@@ -110,26 +103,36 @@ public class ImageViewerWindowController{
 
     public void setDisplayTime(){
         executorService = Executors.newScheduledThreadPool(1);
-        Runnable slide = this::handleBtnNextAction;
-        calculateTime();
-        executorService.scheduleAtFixedRate(slide, calculateTime(), calculateTime(), TimeUnit.SECONDS);
+           Runnable slide = this::handleBtnNextAction;
+           executorService.scheduleAtFixedRate(slide, calculateTime(), calculateTime(), TimeUnit.SECONDS);
+    }
+
+    public void errorMessage(String errorTxt) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Warning");
+        alert.setHeaderText(errorTxt);
+        alert.showAndWait();
     }
 
 
     public void handleStartSlideShow(ActionEvent actionEvent) throws InterruptedException {
-            if (isStopped){
+            if (isStopped && calculateTime() < 6 || calculateTime() > 0) {
                 setDisplayTime();
-                isStopped = false;
-                DisplayTask displayTask = new DisplayTask(images, calculateTime());
+                displayTask = new DisplayTask(images, calculateTime());
                 displayTask.valueProperty().addListener((obs, o, n)->{
                     displayImage(n.getImage());
                     imageName.setText(images.get(displayTask.getCurrentImageIndex()).getFileUrl());
                     displayTask.setCount(colorLabel);
                 });
+                displayTask.setRunning(true);
+                isStopped = false;
                 service.submit(displayTask);
                 System.out.println("start");
-                System.out.println(redCounter + greenCounter + blueCounter + mixedCounter);
             }
+            else{
+                errorMessage("Please select a number between 1-5");
+            }
+
         }
 
     public Long calculateTime(){
@@ -137,12 +140,9 @@ public class ImageViewerWindowController{
     }
 
     public void handleStopSlideShow(ActionEvent actionEvent) throws InterruptedException {
-            if (!isStopped){
-                executorService.shutdown();
-                isStopped = true;
-            }
-        }
-
-
+            displayTask.setRunning(false);
+            service.shutdownNow();
+            Platform.exit();
+    }
 
 }

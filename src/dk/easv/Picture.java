@@ -1,23 +1,19 @@
 package dk.easv;
 
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 
+import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 
 public class Picture {
     private Image image;
     private String fileUrl;
-    private ExecutorService executorService;
-    private List<Integer> rgbColorList;
 
-    public Picture(Image image, File file) throws ExecutionException, InterruptedException {
+    public Picture(Image image, File file) {
         this.image = image;
         fileUrl = file.getName();
 
@@ -39,15 +35,9 @@ public class Picture {
         this.fileUrl = fileUrl;
     }
 
-    public void rgbThread() throws ExecutionException, InterruptedException {
-        RGBPixelCounter redGreenBluePixelCounter = new RGBPixelCounter(this);
-        Future<ArrayList<Integer>> future = executorService.submit(redGreenBluePixelCounter);
-        rgbColorList = future.get();
-    }
 
 
 
-    public List<Integer> getRgbColorList() {
-        return rgbColorList;
-    }
+
+
 }
