@@ -107,7 +107,7 @@ public class DisplayTask extends Task<Picture> {
                 }else if(color.getRed() > color.getBlue() && color.getRed() > color.getGreen()){
                     red++;
                 }
-                else if(blue == red && blue == green && red == green) {
+                else if(blue == red || blue == green || red == green) {
                     mixed++;
                 }
             }
